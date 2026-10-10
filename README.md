@@ -1,6 +1,6 @@
 # AniTrack
 
-A personal anime and manga tracker. Add titles manually, attach cover photos, track watched episodes and read chapters, and update each item's status.
+A personal anime and manga tracker. Add titles manually, attach cover photos, and track watched episodes and read chapters. Completion is calculated from the counts and totals.
 
 ## Requirements
 

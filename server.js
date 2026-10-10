@@ -45,8 +45,8 @@ async function ensureCoverColumn(table) {
 }
 
 async function initializeDatabase() {
-    await dbRun('CREATE TABLE IF NOT EXISTS anime(id INTEGER PRIMARY KEY,title TEXT,watched INTEGER,maxEpisodes INTEGER,status TEXT,cover TEXT)');
-    await dbRun('CREATE TABLE IF NOT EXISTS manga(id INTEGER PRIMARY KEY,title TEXT,readChapters INTEGER,maxChapters INTEGER,status TEXT,cover TEXT)');
+    await dbRun('CREATE TABLE IF NOT EXISTS anime(id INTEGER PRIMARY KEY,title TEXT,watched INTEGER,maxEpisodes INTEGER,cover TEXT)');
+    await dbRun('CREATE TABLE IF NOT EXISTS manga(id INTEGER PRIMARY KEY,title TEXT,readChapters INTEGER,maxChapters INTEGER,cover TEXT)');
     await ensureCoverColumn('anime');
     await ensureCoverColumn('manga');
     await fs.mkdir(uploadsDirectory, { recursive: true });
@@ -160,22 +160,22 @@ app.get('/api/manga', async (req, res) => {
 });
 
 app.post('/api/anime', (req, res) => {
-    const { title, watched, maxEpisodes, status } = req.body;
-    createMedia('anime', 'title,watched,maxEpisodes,status', [title, watched, maxEpisodes, status], req, res);
+    const { title, watched, maxEpisodes } = req.body;
+    createMedia('anime', 'title,watched,maxEpisodes', [title, watched, maxEpisodes], req, res);
 });
 
 app.post('/api/manga', (req, res) => {
-    const { title, readChapters, maxChapters, status } = req.body;
-    createMedia('manga', 'title,readChapters,maxChapters,status', [title, readChapters, maxChapters, status], req, res);
+    const { title, readChapters, maxChapters } = req.body;
+    createMedia('manga', 'title,readChapters,maxChapters', [title, readChapters, maxChapters], req, res);
 });
 
 app.put('/api/anime/:id', (req, res) => {
-    const { maxEpisodes, watched, status } = req.body;
-    updateMedia('anime', req.params.id, 'maxEpisodes = ?, watched = ?, status = ?', [maxEpisodes, watched, status], req, res);
+    const { maxEpisodes, watched } = req.body;
+    updateMedia('anime', req.params.id, 'maxEpisodes = ?, watched = ?', [maxEpisodes, watched], req, res);
 });
 app.put('/api/manga/:id', (req, res) => {
-    const { maxChapters, readChapters, status } = req.body;
-    updateMedia('manga', req.params.id, 'maxChapters = ?, readChapters = ?, status = ?', [maxChapters, readChapters, status], req, res);
+    const { maxChapters, readChapters } = req.body;
+    updateMedia('manga', req.params.id, 'maxChapters = ?, readChapters = ?', [maxChapters, readChapters], req, res);
 });
 app.delete('/api/anime/:id', (req, res) => {
     deleteMedia('anime', req.params.id, res);

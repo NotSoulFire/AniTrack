@@ -50,7 +50,6 @@ function openEditModal(type, item) {
     const title = document.getElementById('editTitle');
     const input = document.getElementById('editValue');
     const inputTotal = document.getElementById('editValueTotal');
-    const status = document.getElementById('editStatus');
     const photoInput = document.getElementById('editPhoto');
 
     title.textContent = `Edit ${type === 'anime' ? 'anime' : 'manga'}`;
@@ -58,8 +57,6 @@ function openEditModal(type, item) {
     inputTotal.value = type === 'anime' ? (item.maxEpisodes ?? 0) : (item.maxChapters ?? 0);
     input.placeholder = type === 'anime' ? 'Episodes watched' : 'Chapters read';
 
-    const defaultStatus = item.status || (type === 'anime' ? 'Watching' : 'Reading');
-    status.value = defaultStatus;
     editPhoto = item.cover || null;
     photoInput.value = '';
     showPhotoPreview('editPhotoPreview', editPhoto);
@@ -128,7 +125,6 @@ animeForm.addEventListener('submit', async e => {
             title: animeTitle.value.trim(),
             watched: +animeWatched.value || 0,
             maxEpisodes: +animeMaxEpisodes.value || 0,
-            status: animeStatus.value,
             cover
         })
     });
@@ -165,7 +161,6 @@ mangaForm.addEventListener('submit', async e => {
             title: mangaTitle.value.trim(),
             readChapters: +mangaReadChapters.value || 0,
             maxChapters: +mangaMaxChapters.value || 0,
-            status: mangaStatus.value,
             cover
         })
     });
@@ -327,7 +322,6 @@ async function submitEditForm(event) {
 
     const value = Number(document.getElementById('editValue').value);
     const valueTotal = Number(document.getElementById('editValueTotal').value);
-    const status = document.getElementById('editStatus').value;
     const photoFile = document.getElementById('editPhoto').files[0];
 
     if (!Number.isFinite(value) || !Number.isFinite(valueTotal)) return;
@@ -342,8 +336,8 @@ async function submitEditForm(event) {
     const endpoint = type === 'anime' ? `/api/anime/${item.id}` : `/api/manga/${item.id}`;
     const payload = type === 'anime'
 
-        ? { maxEpisodes: valueTotal, watched: value, status, cover: editPhoto }
-        : { maxChapters: valueTotal, readChapters: value, status, cover: editPhoto };
+        ? { maxEpisodes: valueTotal, watched: value, cover: editPhoto }
+        : { maxChapters: valueTotal, readChapters: value, cover: editPhoto };
 
     try {
         const response = await fetch(endpoint, {
