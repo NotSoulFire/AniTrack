@@ -1,0 +1,15 @@
+{
+  "name": "anitrack-english",
+  "version": "1.0.0",
+  "description": "A personal anime and manga tracker",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "sqlite3": "^6.0.1"
+  }
+}

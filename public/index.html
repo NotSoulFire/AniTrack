@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <title>Anime & Manga Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-shell">
+        <header class="header">
+            <img src="/img/favicon.png" alt="Logo" class="logo">
+            <div>
+                <p class="eyebrow">Anime & Manga Tracker</p>
+                <h1>AniTrack</h1>
+            </div>
+        </header>
+
+        <div id="editModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" onclick="closeEditModal()"></div>
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+                <div class="modal-header">
+                    <div>
+                        <p class="modal-kicker">Update item</p>
+                        <h3 id="editTitle">Edit item</h3>
+                    </div>
+                    <button type="button" class="icon-button" onclick="closeEditModal()">✕</button>
+                </div>
+
+                <form id="editForm" class="edit-form">
+                    <div class="field">
+                        <label for="editValue">Episodes / chapters completed</label>
+                        <input id="editValue" type="number" min="0" placeholder="e.g. 12">
+                    </div>
+                    <div class="field">
+                        <label for="editValueTotal">Total</label>
+                        <input id="editValueTotal" type="number" min="0" placeholder="e.g. 12">
+                    </div>
+                    <div class="field">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus">
+                            <option value="Watching">Watching</option>
+                            <option value="Reading">Reading</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="field photo-field">
+                        <label for="editPhoto">Cover photo</label>
+                        <input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp">
+                        <img id="editPhotoPreview" class="photo-preview hidden" alt="Selected cover preview">
+                        <button type="button" class="secondary-button remove-photo-button" onclick="clearEditPhoto()">Remove photo</button>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="secondary-button" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="primary-button">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <nav class="segment-control" aria-label="Switch between anime and manga">
+            <button class="tab active" onclick="showAnime()">Anime</button>
+            <button class="tab" onclick="showManga()">Manga</button>
+        </nav>
+
+        <main class="content">
+            <section id="animeSection" class="panel">
+                <div class="panel-header">
+                    <h2>Animes</h2>
+                    <span class="pill">Watching</span>
+                </div>
+
+                <form id="animeForm" class="entry-form">
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="animeTitle">Title</label>
+                            <input id="animeTitle" required placeholder="Enter an anime title">
+                        </div>
+                        <div class="field">
+                            <label for="animeWatched">Episodes watched</label>
+                            <input id="animeWatched" type="number" min="0" placeholder="e.g. 12">
+                        </div>
+                        <div class="field">
+                            <label for="animeMaxEpisodes">Total</label>
+                            <input id="animeMaxEpisodes" type="number" min="0" placeholder="e.g. 24">
+                        </div>
+                        <div class="field">
+                            <label for="animeStatus">Status</label>
+                            <select id="animeStatus">
+                                <option>Watching</option>
+                                <option>Completed</option>
+                            </select>
+                        </div>
+                        <div class="field photo-field">
+                            <label for="animePhoto">Cover photo</label>
+                            <input id="animePhoto" type="file" accept="image/jpeg,image/png,image/webp">
+                            <img id="animePhotoPreview" class="photo-preview hidden" alt="Selected anime cover preview">
+                        </div>
+                        <button class="primary-button" type="submit">Add anime</button>
+                    </div>
+                </form>
+
+                <div id="animeList" class="library-grid"></div>
+                <canvas id="AStatsChart" class="stats-chart"></canvas>
+            </section>
+
+            <section id="mangaSection" class="panel" style="display:none">
+                <div class="panel-header">
+                    <h2>Manga</h2>
+                    <span class="pill">Reading</span>
+                </div>
+
+                <form id="mangaForm" class="entry-form">
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="mangaTitle">Title</label>
+                            <input id="mangaTitle" required placeholder="Enter a manga title">
+                        </div>
+                        <div class="field">
+                            <label for="mangaReadChapters">Chapters read</label>
+                            <input id="mangaReadChapters" type="number" min="0" placeholder="e.g. 8">
+                        </div>
+                        <div class="field">
+                            <label for="mangaMaxChapters">Total</label>
+                            <input id="mangaMaxChapters" type="number" min="0" placeholder="e.g. 20">
+                        </div>
+                        <div class="field">
+                            <label for="mangaStatus">Status</label>
+                            <select id="mangaStatus">
+                                <option>Reading</option>
+                                <option>Completed</option>
+                            </select>
+                        </div>
+                        <div class="field photo-field">
+                            <label for="mangaPhoto">Cover photo</label>
+                            <input id="mangaPhoto" type="file" accept="image/jpeg,image/png,image/webp">
+                            <img id="mangaPhotoPreview" class="photo-preview hidden" alt="Selected manga cover preview">
+                        </div>
+                        <button class="primary-button" type="submit">Add manga</button>
+                    </div>
+                </form>
+
+                <div id="mangaList" class="library-grid"></div>
+                <canvas id="MStatsChart" class="stats-chart"></canvas>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
